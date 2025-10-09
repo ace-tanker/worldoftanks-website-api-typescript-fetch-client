@@ -1,0 +1,22 @@
+{
+  "name": "worldoftanks-website-api-fetch-client",
+  "version": "0.0.1",
+  "description": "OpenAPI client for worldoftanks-website-api-fetch-client",
+  "author": "OpenAPI-Generator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ace-tanker/worldoftanks-website-api-typescript-fetch-client.git"
+  },
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc && tsc -p tsconfig.esm.json",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^4.0 || ^5.0"
+  }
+}
