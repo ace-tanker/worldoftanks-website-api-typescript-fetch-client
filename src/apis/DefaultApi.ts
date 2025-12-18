@@ -16,14 +16,23 @@
 import * as runtime from '../runtime.js';
 import type {
   GetHallOfFameAchievements200Response,
+  GetHallOfFameTankAchievements200Response,
   GetPlayerAchievements200Response,
+  GetPlayerTankAchievements200Response,
+  GetVehicles200Response,
   SearchPlayersAndClans200Response,
 } from '../models/index.js';
 import {
     GetHallOfFameAchievements200ResponseFromJSON,
     GetHallOfFameAchievements200ResponseToJSON,
+    GetHallOfFameTankAchievements200ResponseFromJSON,
+    GetHallOfFameTankAchievements200ResponseToJSON,
     GetPlayerAchievements200ResponseFromJSON,
     GetPlayerAchievements200ResponseToJSON,
+    GetPlayerTankAchievements200ResponseFromJSON,
+    GetPlayerTankAchievements200ResponseToJSON,
+    GetVehicles200ResponseFromJSON,
+    GetVehicles200ResponseToJSON,
     SearchPlayersAndClans200ResponseFromJSON,
     SearchPlayersAndClans200ResponseToJSON,
 } from '../models/index.js';
@@ -31,6 +40,17 @@ import {
 export interface GetHallOfFameAchievementsRequest {
     battles_count: number;
     tier_group: number;
+    time_slice: string;
+    stat_type: string;
+    lang?: string;
+    page?: number;
+    page_size?: number;
+    social_slice?: string;
+}
+
+export interface GetHallOfFameTankAchievementsRequest {
+    vehicle_cd: number;
+    battles_count: number;
     time_slice: string;
     stat_type: string;
     lang?: string;
@@ -48,6 +68,22 @@ export interface GetPlayerAchievementsRequest {
     lang?: string;
     page?: number;
     page_size?: number;
+}
+
+export interface GetPlayerTankAchievementsRequest {
+    vehicle_cd: number;
+    battles_count: number;
+    time_slice: string;
+    stat_type: string;
+    spa_id: number;
+    lang?: string;
+    page?: number;
+    page_size?: number;
+    social_slice?: string;
+}
+
+export interface GetVehiclesRequest {
+    filter_language: string;
 }
 
 export interface SearchPlayersAndClansRequest {
@@ -85,6 +121,29 @@ export interface DefaultApiInterface {
     getHallOfFameAchievements(requestParameters: GetHallOfFameAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetHallOfFameAchievements200Response>;
 
     /**
+     * Returns full player tank statistics for the Hall of Fame.
+     * @summary Get Hall of Fame Tank achievements
+     * @param {number} vehicle_cd Vehicle ID
+     * @param {number} battles_count Minimum number of battles
+     * @param {string} time_slice Period (YYYY-MM)
+     * @param {string} stat_type Statistic type
+     * @param {string} [lang] Response language
+     * @param {number} [page] Page number
+     * @param {number} [page_size] Number of items per page
+     * @param {string} [social_slice] Social filter
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApiInterface
+     */
+    getHallOfFameTankAchievementsRaw(requestParameters: GetHallOfFameTankAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetHallOfFameTankAchievements200Response>>;
+
+    /**
+     * Returns full player tank statistics for the Hall of Fame.
+     * Get Hall of Fame Tank achievements
+     */
+    getHallOfFameTankAchievements(requestParameters: GetHallOfFameTankAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetHallOfFameTankAchievements200Response>;
+
+    /**
      * Returns personal and common achievement statistics for a user.
      * @summary Search achievements by user
      * @param {number} battles_count Minimum number of battles
@@ -106,6 +165,46 @@ export interface DefaultApiInterface {
      * Search achievements by user
      */
     getPlayerAchievements(requestParameters: GetPlayerAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetPlayerAchievements200Response>;
+
+    /**
+     * Returns full player tank achievements for the Hall of Fame.
+     * @summary Player tank achievements
+     * @param {number} vehicle_cd Vehicle ID
+     * @param {number} battles_count Minimum number of battles
+     * @param {string} time_slice Period (YYYY-MM)
+     * @param {string} stat_type Statistic type
+     * @param {number} spa_id Player account ID
+     * @param {string} [lang] Response language
+     * @param {number} [page] Page number
+     * @param {number} [page_size] Number of items per page
+     * @param {string} [social_slice] Social filter
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApiInterface
+     */
+    getPlayerTankAchievementsRaw(requestParameters: GetPlayerTankAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetPlayerTankAchievements200Response>>;
+
+    /**
+     * Returns full player tank achievements for the Hall of Fame.
+     * Player tank achievements
+     */
+    getPlayerTankAchievements(requestParameters: GetPlayerTankAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetPlayerTankAchievements200Response>;
+
+    /**
+     * Returns list of vehicles.
+     * @summary Get Hall of Fame Tanks
+     * @param {string} filter_language Response language
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApiInterface
+     */
+    getVehiclesRaw(requestParameters: GetVehiclesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetVehicles200Response>>;
+
+    /**
+     * Returns list of vehicles.
+     * Get Hall of Fame Tanks
+     */
+    getVehicles(requestParameters: GetVehiclesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetVehicles200Response>;
 
     /**
      * Returns search results for clans and players.
@@ -200,7 +299,7 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
 
-        let urlPath = `/wgris/hof/achievements/full/`;
+        let urlPath = `/achievements/full/`;
 
         const response = await this.request({
             path: urlPath,
@@ -218,6 +317,94 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
      */
     async getHallOfFameAchievements(requestParameters: GetHallOfFameAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetHallOfFameAchievements200Response> {
         const response = await this.getHallOfFameAchievementsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Returns full player tank statistics for the Hall of Fame.
+     * Get Hall of Fame Tank achievements
+     */
+    async getHallOfFameTankAchievementsRaw(requestParameters: GetHallOfFameTankAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetHallOfFameTankAchievements200Response>> {
+        if (requestParameters['vehicle_cd'] == null) {
+            throw new runtime.RequiredError(
+                'vehicle_cd',
+                'Required parameter "vehicle_cd" was null or undefined when calling getHallOfFameTankAchievements().'
+            );
+        }
+
+        if (requestParameters['battles_count'] == null) {
+            throw new runtime.RequiredError(
+                'battles_count',
+                'Required parameter "battles_count" was null or undefined when calling getHallOfFameTankAchievements().'
+            );
+        }
+
+        if (requestParameters['time_slice'] == null) {
+            throw new runtime.RequiredError(
+                'time_slice',
+                'Required parameter "time_slice" was null or undefined when calling getHallOfFameTankAchievements().'
+            );
+        }
+
+        if (requestParameters['stat_type'] == null) {
+            throw new runtime.RequiredError(
+                'stat_type',
+                'Required parameter "stat_type" was null or undefined when calling getHallOfFameTankAchievements().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['lang'] != null) {
+            queryParameters['lang'] = requestParameters['lang'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['page_size'] != null) {
+            queryParameters['page_size'] = requestParameters['page_size'];
+        }
+
+        if (requestParameters['battles_count'] != null) {
+            queryParameters['battles_count'] = requestParameters['battles_count'];
+        }
+
+        if (requestParameters['time_slice'] != null) {
+            queryParameters['time_slice'] = requestParameters['time_slice'];
+        }
+
+        if (requestParameters['stat_type'] != null) {
+            queryParameters['stat_type'] = requestParameters['stat_type'];
+        }
+
+        if (requestParameters['social_slice'] != null) {
+            queryParameters['social_slice'] = requestParameters['social_slice'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/vehicles/{vehicle_cd}/`;
+        urlPath = urlPath.replace(`{${"vehicle_cd"}}`, encodeURIComponent(String(requestParameters['vehicle_cd'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetHallOfFameTankAchievements200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns full player tank statistics for the Hall of Fame.
+     * Get Hall of Fame Tank achievements
+     */
+    async getHallOfFameTankAchievements(requestParameters: GetHallOfFameTankAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetHallOfFameTankAchievements200Response> {
+        const response = await this.getHallOfFameTankAchievementsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -298,7 +485,7 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
 
-        let urlPath = `/wgris/hof/achievements/search/by_user/`;
+        let urlPath = `/achievements/search/by_user/`;
 
         const response = await this.request({
             path: urlPath,
@@ -316,6 +503,147 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
      */
     async getPlayerAchievements(requestParameters: GetPlayerAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetPlayerAchievements200Response> {
         const response = await this.getPlayerAchievementsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Returns full player tank achievements for the Hall of Fame.
+     * Player tank achievements
+     */
+    async getPlayerTankAchievementsRaw(requestParameters: GetPlayerTankAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetPlayerTankAchievements200Response>> {
+        if (requestParameters['vehicle_cd'] == null) {
+            throw new runtime.RequiredError(
+                'vehicle_cd',
+                'Required parameter "vehicle_cd" was null or undefined when calling getPlayerTankAchievements().'
+            );
+        }
+
+        if (requestParameters['battles_count'] == null) {
+            throw new runtime.RequiredError(
+                'battles_count',
+                'Required parameter "battles_count" was null or undefined when calling getPlayerTankAchievements().'
+            );
+        }
+
+        if (requestParameters['time_slice'] == null) {
+            throw new runtime.RequiredError(
+                'time_slice',
+                'Required parameter "time_slice" was null or undefined when calling getPlayerTankAchievements().'
+            );
+        }
+
+        if (requestParameters['stat_type'] == null) {
+            throw new runtime.RequiredError(
+                'stat_type',
+                'Required parameter "stat_type" was null or undefined when calling getPlayerTankAchievements().'
+            );
+        }
+
+        if (requestParameters['spa_id'] == null) {
+            throw new runtime.RequiredError(
+                'spa_id',
+                'Required parameter "spa_id" was null or undefined when calling getPlayerTankAchievements().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['lang'] != null) {
+            queryParameters['lang'] = requestParameters['lang'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['page_size'] != null) {
+            queryParameters['page_size'] = requestParameters['page_size'];
+        }
+
+        if (requestParameters['battles_count'] != null) {
+            queryParameters['battles_count'] = requestParameters['battles_count'];
+        }
+
+        if (requestParameters['time_slice'] != null) {
+            queryParameters['time_slice'] = requestParameters['time_slice'];
+        }
+
+        if (requestParameters['stat_type'] != null) {
+            queryParameters['stat_type'] = requestParameters['stat_type'];
+        }
+
+        if (requestParameters['social_slice'] != null) {
+            queryParameters['social_slice'] = requestParameters['social_slice'];
+        }
+
+        if (requestParameters['spa_id'] != null) {
+            queryParameters['spa_id'] = requestParameters['spa_id'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/vehicles/{vehicle_cd}/search/by_user/`;
+        urlPath = urlPath.replace(`{${"vehicle_cd"}}`, encodeURIComponent(String(requestParameters['vehicle_cd'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetPlayerTankAchievements200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns full player tank achievements for the Hall of Fame.
+     * Player tank achievements
+     */
+    async getPlayerTankAchievements(requestParameters: GetPlayerTankAchievementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetPlayerTankAchievements200Response> {
+        const response = await this.getPlayerTankAchievementsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Returns list of vehicles.
+     * Get Hall of Fame Tanks
+     */
+    async getVehiclesRaw(requestParameters: GetVehiclesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetVehicles200Response>> {
+        if (requestParameters['filter_language'] == null) {
+            throw new runtime.RequiredError(
+                'filter_language',
+                'Required parameter "filter_language" was null or undefined when calling getVehicles().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['filter_language'] != null) {
+            queryParameters['filter[language]'] = requestParameters['filter_language'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/search/vehicles/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetVehicles200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns list of vehicles.
+     * Get Hall of Fame Tanks
+     */
+    async getVehicles(requestParameters: GetVehiclesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetVehicles200Response> {
+        const response = await this.getVehiclesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -340,7 +668,7 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
 
-        let urlPath = `/wgris/hof/search/`;
+        let urlPath = `/search/`;
 
         const response = await this.request({
             path: urlPath,

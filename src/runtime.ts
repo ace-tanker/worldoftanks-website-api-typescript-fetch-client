@@ -13,7 +13,7 @@
  */
 
 
-export const BASE_PATH = "https://worldoftanks.eu".replace(/\/+$/, "");
+export const BASE_PATH = "https://worldoftanks.eu/wgris/hof".replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
